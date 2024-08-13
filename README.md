@@ -1,6 +1,6 @@
 # Windows Golem Requestor Installer
 
-I wrote this little Powershell script to make it easier to install & manage the Golem Requestor daemon for Windows.
+I wrote this little Powershell script to make it easier to install/update & manage the Golem Requestor daemon for Windows.
 
 Indeed, initially, you have to:
 - download the latest Yagna binaries on the Golem repository
