@@ -1,0 +1,8 @@
+<service>
+  <id>yagna</id>
+  <name>Yagna</name>
+  <description>This service runs Yagna daemon</description>
+  <executable>yagna.exe</executable>
+  <arguments>service run</arguments>
+  <log mode="roll"></log>
+</service>
