@@ -168,12 +168,23 @@ function Install-All
 
 	Write-Host
 
-	Write-Host "	Download and Install WinSW is not already done"
+	Write-Host "	Download and Install WinSW if not already done"
 	if (!$(Check-WinSW $GolemDirectory)) {
 		Install-WinSW $GolemDirectory
 		Write-Host "	WinSW installed with success"
 	} else {
 		Write-Host "	WinSW already installed"
+	}
+
+	Write-Host
+
+	Write-Host "	Copy service config if not already done"
+	$TargetXmlConfig = '{0}\WinSW-x64.xml' -f $GolemDirectory
+	if (!$(Check-Path $TargetXmlConfig)) {
+		Copy-Item -Path "./WinSW-x64.xml" -Destination $GolemDirectory
+		Write-Host "	Service config copied to Golem directory with success"
+	} else {
+		Write-Host "	Service config already exists in Golem directory"
 	}
 
 	Write-Host
@@ -198,7 +209,7 @@ function Install-All
 	Write-Host
 
 	Write-Host "	Add Golem directory to env Path (user) if not already done"
-	$EnvPath = $([Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine))
+	$EnvPath = $([Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User))
 	if (!($EnvPath.Contains($GolemDirectory))) {
 		Add-Path-Directory $GolemDirectory
 		Write-Host "	Golem directory added to env Path (user) with success"
@@ -284,35 +295,80 @@ function Menu
 					Write-Host "Install service"
 					Write-Host
 					Check-Yagna-And-WinSW $GolemDirectory
-					Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
+					$WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
+					if (($WinSwStatus.Contains('Started')) -or ($WinSwStatus.Contains('Stopped'))) {
+						Write-Host "	Nothing to do, service is already installed"		
+					} else {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
+						Write-Host "	Service installed with success"
+					}
 				}
 			'3'
 				{
 					Write-Host "Uninstall service"
 					Write-Host
 					Check-Yagna-And-WinSW $GolemDirectory
-					Run-WinSW-Command $ExeWinSW $ConfigWinSW 'uninstall'
+					$WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
+					if ($WinSwStatus.Contains('Started')) {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'uninstall'
+						Write-Host "	Service stopped and uninstalled with success"		
+					} elseif ($WinSwStatus.Contains('Stopped')) {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'uninstall'
+						Write-Host "	Service uninstalled with success"
+					} else {
+						Write-Host "	Nothing to do, Service is not installed"
+					}
 				}
 			'4'
 				{
 					Write-Host "Start service"
 					Write-Host
 					Check-Yagna-And-WinSW $GolemDirectory
-					Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+					$WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
+					if ($WinSwStatus.Contains('Started')) {
+						Write-Host "	Nothing to do, Service is already started"		
+					} elseif ($WinSwStatus.Contains('Stopped')) {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+						Write-Host "	Service started with success"
+					} else {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+						Write-Host "	Service installed and started with success"
+					}
 				}
 			'5'
 				{
 					Write-Host "Stop service"
 					Write-Host
 					Check-Yagna-And-WinSW $GolemDirectory
-					Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
+					$WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
+					if ($WinSwStatus.Contains('Started')) {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
+						Write-Host "	Service stopped with success"		
+					} elseif ($WinSwStatus.Contains('Stopped')) {
+						Write-Host "	Nothing to do, Service is already stopped"
+					} else {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
+						Write-Host "	Service is now installed but stopped"
+					}
 				}
 			'6'
 				{
 					Write-Host "Restart service"
 					Write-Host
 					Check-Yagna-And-WinSW $GolemDirectory
-					Run-WinSW-Command $ExeWinSW $ConfigWinSW 'restart'
+					$WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
+					if ($WinSwStatus.Contains('Started')) {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'restart'
+						Write-Host "	Service restarted with success"		
+					} elseif ($WinSwStatus.Contains('Stopped')) {
+						Write-Host "	Service started with success"
+					} else {
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
+						Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+						Write-Host "	Service is now installed and started"
+					}
 				}
 			'7'
 				{
