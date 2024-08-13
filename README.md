@@ -13,4 +13,12 @@ And for each use of the network, first launch the daemon in a dedicated window b
 
 Thus, this script allows to automate the installation as well as create and manage the daemon as a Windows service.  
 As the Yagna daemon does not implement Windows service methods, we use the WinSW binary in order to wrap this binary as a service.
+  
+**How to use:**  
+
+Download and extract (or clone), this repository on your system, open a Powershell terminal and go to the directory where this setup is located, then run: 
+```
+powershell.exe -ExecutionPolicy Bypass -File install_golem_requestor.ps1
+```
+
 
