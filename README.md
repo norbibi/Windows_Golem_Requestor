@@ -21,4 +21,6 @@ Download and extract (or clone), this repository on your system, open a Powershe
 powershell.exe -ExecutionPolicy Bypass -File install_golem_requestor.ps1
 ```
 
-
+<p align="center">
+<img src="screenshots/golem_requestor_install.png" width="75%"> 
+</p>
