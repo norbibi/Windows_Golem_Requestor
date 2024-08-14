@@ -136,16 +136,23 @@ function Run-WinSW-Command
 function Create-App-Key
 {
 	param (
+		$GolemDirectory,
 		$AppKey
     )
 
-    $AppKey = $(yagna app-key create $AppKey --json) | Out-String
-	Write-Output $JsonAppKey
+    $Cmd = '{0}\yagna.exe app-key create {1} --json' -f $GolemDirectory, $AppKey
+    $JsonAppKey = Invoke-Expression $Cmd
+	Write-Output $JsonAppKey.Trim('"')
 }
 
 function Get-App-Key
 {
-	$AppKeys = $(yagna app-key list --json) | Out-String
+	param (
+		$GolemDirectory
+    )
+
+    $Cmd = '{0}\yagna.exe app-key list --json' -f $GolemDirectory
+    $AppKeys = Invoke-Expression $Cmd | Out-String
 	$JsonAppKeys = ConvertFrom-JSON -InputObject $AppKeys
 	Write-Output $JsonAppKeys
 }
@@ -161,9 +168,9 @@ function Install-All
     Write-Host "	Create Golem directory if doesn't exist"
 	if (!$(Check-Path $GolemDirectory)) {
 		Create-Repository $GolemDirectory
-		Write-Host "	Golem directory created with success"
+		Write-Host $("	Golem directory {0} created with success" -f $GolemDirectory)
 	} else {
-		Write-Host "	Golem directory already exists"
+		Write-Host $("	Golem directory {0} already exists" -f $GolemDirectory)
 	}
 
 	Write-Host
@@ -232,26 +239,20 @@ function Install-All
 	Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
 	Write-Host "	Service started with success"
 
-	$($env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User"))
-
 	Write-Host
 
 	Write-Host "	Create App-Key if not already exist and set env YAGNA_APP_KEY"
-	$JsonAppKeys = Get-App-Key
+	$JsonAppKeys = $(Get-App-Key $GolemDirectory)
 	if (!($JsonAppKeys.Count -eq 0)) {
 		$JsonAppKey = $JsonAppKeys[0].key
-		$Msg = "	App-key {0} found" -f $JsonAppKeys[0].name
-		Write-Host $Msg
+		Write-Host $("	App-key {0} found" -f $JsonAppKeys[0].name)
 	} else {
-		$JsonAppKey = $(Create-App-Key "my_app_key")
+		$JsonAppKey = $(Create-App-Key $GolemDirectory "my_app_key")
 		Write-Host "	No App-key found, my_app_key created with success"
 	}
 
 	[Environment]::SetEnvironmentVariable("YAGNA_APPKEY", $JsonAppKey, [EnvironmentVariableTarget]::User)
-
-	Start-Sleep -Seconds 2
-
-	$($env:YAGNA_APPKEY = [System.Environment]::GetEnvironmentVariable("YAGNA_APPKEY", "User"))
+	Write-Host $("	YAGNA_APPKEY={0} added as environment variable with success" -f $JsonAppKey)
 }
 
 function Show-Menu
@@ -388,4 +389,10 @@ function Menu
 	until ($input -eq '0')
 }
 
-Menu
+
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Host("Not running as administrator! Please run PowerShell as admin.") -ForegroundColor Red;
+    exit;
+} else {
+	Menu
+}
