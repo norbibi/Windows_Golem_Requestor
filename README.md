@@ -16,7 +16,7 @@ Yagna daemon does not implement Windows service methods, so we use the WinSW bin
   
 **How to use:**  
 
-Download and extract (or clone), this repository on your system, open a Powershell terminal and go to the directory where this setup is located, then run: 
+Download and extract (or clone), this repository on your system, open a Powershell terminal as Administrator and go to the directory where this setup is located, then run: 
 ```
 powershell.exe -ExecutionPolicy Bypass -File install_golem_requestor.ps1
 ```
