@@ -271,7 +271,7 @@ function Menu {
           $WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
           if ($WinSwStatus.Contains('Started')) {
               Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
-              Start-Sleep -Seconds 5
+              Start-Sleep -Seconds 10
               Write-Host "    Service stopped with success"       
           } elseif ($WinSwStatus.Contains('Stopped')) {
               Write-Host "    Service is already stopped"
