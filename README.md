@@ -3,7 +3,7 @@
 ## Why this installer?
 I wrote this installer to make it easier to install/update & manage the Golem Requestor daemon for Windows.
 Indeed, initially, you have to:
-- Download the latest Yagna binaries on the Golem repository.
+- Download the latest Yagna binaries.
 - Extract them somewhere on your system.
 - Add the path to the Path environment variable.
 - Create the app-key.
