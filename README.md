@@ -12,7 +12,7 @@ Indeed, initially, you have to:
 In addition, as Yagna daemon does not implement Windows service methods, you need to first launch the daemon in a dedicated window before running your application.  
 WinSW is used to wrap Yagna daemon as a Windows service.
 
-**Thus, this tool makes it possible to automate the installation and management of the daemon.**  
+**Thus, this tool makes it possible to automate the installationof the daemon.**  
 **Once installed, no need to worry about the daemon anymore, it is launched automatically, just start your application.**  
   
 ## How to use  
