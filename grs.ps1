@@ -137,18 +137,6 @@ function Install-All {
   }
 
   Write-Host
-  Write-Host "    Stop service before Yagna update"
-  $WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
-  if ($WinSwStatus.Contains('Started')) {
-    Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
-    Write-Host "    Service stopped with success"   
-  } elseif ($WinSwStatus.Contains('Stopped')) {
-    Write-Host "    Service is already stopped"      
-  } else {
-    Write-Host "    Service is not installed"
-  }
-
-  Write-Host
   Write-Host "    Download and Install latest release of Yagna"
   Install-Yagna $GolemDirectory
   Write-Host "    Yagna installed with success"
@@ -167,13 +155,16 @@ function Install-All {
   Write-Host "    Install and start service"
   $WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
   if ($WinSwStatus.Contains('Stopped')) {
-    Write-Host "    Service already exists"     
+    Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+    Write-Host "    Service already installed, started with success"
+  } elseif ($WinSwStatus.Contains('Started')) {
+    Run-WinSW-Command $ExeWinSW $ConfigWinSW 'restart'
+    Write-Host "    Service already installed, restarted with success"
   } else {
     Run-WinSW-Command $ExeWinSW $ConfigWinSW 'install'
-    Write-Host "    Service installed with success"
+    Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+    Write-Host "    Service installed and started with success"
   }
-  Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
-  Write-Host "    Service started with success"
   
   Write-Host
   Write-Host "    Create App-Key"
