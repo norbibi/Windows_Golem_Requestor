@@ -16,7 +16,7 @@ WinSW is used to wrap Yagna daemon as a Windows service.
 **Once installed, no need to worry about the daemon anymore, it is launched automatically, just start your application.**  
   
 ## How to use:  
-- Download and extract (or clone) this repository somewhere on your system.  
+- Download ZIP archive and extract (or clone) this repository somewhere on your system.  
 - Click on CreateShortcut.bat to create a shortcut on your desktop.
 - Launch GolemRequestorService by clicking on shortcut.
 - Select option 1 to install.
