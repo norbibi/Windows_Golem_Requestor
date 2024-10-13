@@ -127,7 +127,7 @@ function Install-All {
   }
 
   Write-Host
-  Write-Host "    Copy service config if not already done"
+  Write-Host "    Copy service config"
   $TargetXmlConfig = '{0}\WinSW-x64.xml' -f $GolemDirectory
   if (!$(Check-Path $TargetXmlConfig)) {
     Copy-Item -Path "./WinSW-x64.xml" -Destination $GolemDirectory
@@ -137,7 +137,7 @@ function Install-All {
   }
 
   Write-Host
-  Write-Host "    Stop service if started before updating Yagna"
+  Write-Host "    Stop service before Yagna update"
   $WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
   if ($WinSwStatus.Contains('Started')) {
     Run-WinSW-Command $ExeWinSW $ConfigWinSW 'stop'
@@ -154,7 +154,7 @@ function Install-All {
   Write-Host "    Yagna installed with success"
 
   Write-Host
-  Write-Host "    Add Golem directory to env Path (user) if not already done"
+  Write-Host "    Add Golem directory to env Path (user)"
   $EnvPath = $([Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User))
   if (!($EnvPath.Contains($GolemDirectory))) {
     Add-Path-Directory $GolemDirectory
@@ -176,14 +176,14 @@ function Install-All {
   Write-Host "    Service started with success"
   
   Write-Host
-  Write-Host "    Create App-Key if not already exist"
+  Write-Host "    Create App-Key"
   $JsonAppKeys = $(Get-App-Key $GolemDirectory)
   if (!($JsonAppKeys.Count -eq 0)) {
     $JsonAppKey = $JsonAppKeys[0].key
-    Write-Host $("    App-key {0} found" -f $JsonAppKeys[0].name)
+    Write-Host $("    App-key found")
   } else {
     $JsonAppKey = $(Create-App-Key $GolemDirectory "my_app_key")
-    Write-Host "    No App-key found, my_app_key created with success"
+    Write-Host "    App-key created with success"
   }
 
   Start-Sleep -Seconds 5
