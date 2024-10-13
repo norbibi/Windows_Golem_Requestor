@@ -176,7 +176,7 @@ function Install-All {
   Write-Host "    Service started with success"
   
   Write-Host
-  Write-Host "    Create App-Key if not already exist and set env YAGNA_APP_KEY"
+  Write-Host "    Create App-Key if not already exist"
   $JsonAppKeys = $(Get-App-Key $GolemDirectory)
   if (!($JsonAppKeys.Count -eq 0)) {
     $JsonAppKey = $JsonAppKeys[0].key
@@ -185,10 +185,8 @@ function Install-All {
     $JsonAppKey = $(Create-App-Key $GolemDirectory "my_app_key")
     Write-Host "    No App-key found, my_app_key created with success"
   }
-  [Environment]::SetEnvironmentVariable("YAGNA_APPKEY", $JsonAppKey, [EnvironmentVariableTarget]::User)
-  Write-Host $("    YAGNA_APPKEY={0} added as environment variable with success" -f $JsonAppKey)
 
-  Start-Sleep -Seconds 2
+  Start-Sleep -Seconds 5
 
   Write-Host
   Write-Host "    Request test tokens"
