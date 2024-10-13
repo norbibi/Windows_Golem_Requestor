@@ -26,7 +26,7 @@ WinSW is used to wrap Yagna daemon as a Windows service.
 </p>
   
 Additional actions are available to manage the service.  
-To update Yagna just relaunch GolemRequestorService and select option 1 (as for initial installation).  
+To update Yagna just relaunch GolemRequestorService and select option 1 as for initial installation.  
   
 <p align="center">
 <img src="resources/grs.png" width="100%"> 
