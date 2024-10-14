@@ -165,6 +165,7 @@ function Install-All {
     Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
     Write-Host "    Service installed and started with success"
   }
+  Start-Sleep -Seconds 5
   
   Write-Host
   Write-Host "    Create App-Key"
@@ -176,8 +177,6 @@ function Install-All {
     $JsonAppKey = $(Create-App-Key $GolemDirectory "my_app_key")
     Write-Host "    App-key created with success"
   }
-
-  Start-Sleep -Seconds 5
 
   Write-Host
   Write-Host "    Request test tokens"
@@ -250,6 +249,7 @@ function Menu {
             Write-Host "    Service is already started"      
           } elseif ($WinSwStatus.Contains('Stopped')) {
             Run-WinSW-Command $ExeWinSW $ConfigWinSW 'start'
+            Start-Sleep -Seconds 5
             Write-Host "    Service started with success"
           } else {
             Write-Host "    Error, service is not installed"
@@ -277,6 +277,7 @@ function Menu {
           $WinSwStatus = Run-WinSW-Command $ExeWinSW $ConfigWinSW 'status'
           if ($WinSwStatus.Contains('Started')) {
             Run-WinSW-Command $ExeWinSW $ConfigWinSW 'restart'
+            Start-Sleep -Seconds 5
             Write-Host "    Service restarted with success"     
           } elseif ($WinSwStatus.Contains('Stopped')) {
             Write-Host "    Error, service is not started"
