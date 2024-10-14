@@ -9,7 +9,7 @@ Indeed, initially, you have to:
 - Create the app-key.
 - Request test tokens.  
 
-In addition, as Yagna daemon does not implement Windows service methods, you need to first launch the daemon in a dedicated terminal before running your application.  
+In addition, you need to first launch the daemon in a dedicated terminal before running your application.  
 WinSW is used to wrap Yagna daemon as a Windows service.
 
 **Thus, this tool makes it possible to automate the installation of the daemon.**  
